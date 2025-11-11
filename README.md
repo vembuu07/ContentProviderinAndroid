@@ -30,15 +30,160 @@ Step 7: Save and run the application.
 ```
 /*
 Program to print the text create your own content providers to get contacts details.
-Developed by:
-Registeration Number :
+Developed by: VEMBARASAN P
+Registeration Number :212223220123
 */
 ```
 
+activity_main.xml
+```
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <Button
+        android:id="@+id/btnGetContacts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/holo_purple"
+        android:text="GET CONTACTS"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvContacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+</LinearLayout>
+```
+MainActivity.java
+```
+package com.example.contentprovider;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.contentprovider.R;
+
+public class MainActivity extends AppCompatActivity {
+
+    private static final int REQUEST_CONTACT_PERMISSION = 1;
+
+    Button btnGetContacts;
+    TextView tvContacts;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        btnGetContacts = findViewById(R.id.btnGetContacts);
+        tvContacts = findViewById(R.id.tvContacts);
+
+        btnGetContacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CONTACT_PERMISSION);
+                } else {
+                    getContacts();
+                }
+            }
+        });
+    }
+
+    private void getContacts() {
+        StringBuilder builder = new StringBuilder();
+
+        Cursor cursor = getContentResolver().query(
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                null, null, null, null);
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String name = cursor.getString(
+                        cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                String phone = cursor.getString(
+                        cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                builder.append("Name: ").append(name).append("\nPhone: ").append(phone).append("\n\n");
+            }
+            cursor.close();
+        }
+
+        tvContacts.setText(builder.toString());
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_CONTACT_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getContacts();
+            } else {
+                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+}
+```
+
+AndroidManifest.xml
+```
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.contentprovider">
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Contentprovider">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>
+```
 ## OUTPUT
+<img width="1920" height="1080" alt="Screenshot 2025-11-11 142020" src="https://github.com/user-attachments/assets/9f7d4c26-7577-40e4-9174-495b3826ae7f" />
+<img width="1920" height="1080" alt="Screenshot 2025-11-11 142155" src="https://github.com/user-attachments/assets/fdc40a13-0705-4b1c-99b5-6d679eae672b" />
 
 
 
 
 ## RESULT
 Thus a Simple Android Application create your own content providers to get contacts details using Android Studio is developed and executed successfully.
+
+
