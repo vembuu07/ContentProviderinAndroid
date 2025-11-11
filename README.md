@@ -1,5 +1,5 @@
 
-# Ex.No:3 Create Your Own Content Providers to get Contacts details.
+# Ex.No 4 Create Your Own Content Providers to get Contacts details.
 
 
 ## AIM:
@@ -185,5 +185,6 @@ AndroidManifest.xml
 
 ## RESULT
 Thus a Simple Android Application create your own content providers to get contacts details using Android Studio is developed and executed successfully.
+
 
 
